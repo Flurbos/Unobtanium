@@ -50,5 +50,5 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_ORG_DOMAIN "unobtanium.uno"
 #define QAPP_APP_NAME_DEFAULT "Unobtanium-Qt"
 #define QAPP_APP_NAME_TESTNET "Unobtanium-Qt-testnet"
-
+#define QAPP_APP_NAME_SEGNET "Unobtanium-Qt-segnet"
 #endif // BITCOIN_QT_GUICONSTANTS_H
