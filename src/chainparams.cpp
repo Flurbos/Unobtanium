@@ -22,6 +22,27 @@ struct SeedSpec6 {
 
 #include "chainparamsseeds.h"
 
+static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+{
+    CMutableTransaction txNew;
+    txNew.nVersion = 1;
+    txNew.vin.resize(1);
+    txNew.vout.resize(1);
+    txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    txNew.vout[0].nValue = genesisReward;
+    txNew.vout[0].scriptPubKey = genesisOutputScript;
+
+    CBlock genesis;
+    genesis.nTime    = nTime;
+    genesis.nBits    = nBits;
+    genesis.nNonce   = nNonce;
+    genesis.nVersion = nVersion;
+    genesis.vtx.push_back(txNew);
+    genesis.hashPrevBlock.SetNull();
+    genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
+    return genesis;
+}
+
 /**
  * Main network
  */
@@ -256,6 +277,67 @@ public:
 static CTestNetParams testNetParams;
 
 /**
+ * Segnet
+ */
+class CSegNetParams : public CChainParams {
+public:
+    CSegNetParams() {
+        strNetworkID = "segnet4";
+        nSubsidyHalvingInterval = 210000;
+        nMajorityEnforceBlockUpgrade = 7;
+        nMajorityRejectBlockOutdated = 9;
+        nMajorityWindow = 10;
+        BIP34Height = -1;
+        BIP34Hash = uint256();
+        powLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // 512x lower min difficulty than mainnet
+        nPowTargetTimespan = 3 * 60; // two weeks
+        nPowTargetSpacing = 60;
+        fPowAllowMinDifficultyBlocks = true;
+        fPowNoRetargeting = false;
+        pchMessageStart[0] = 0xdc;
+        pchMessageStart[1] = 0xab;
+        pchMessageStart[2] = 0xa1;
+        pchMessageStart[3] = 0xc4;
+        nDefaultPort = 28901;
+        nPruneAfterHeight = 1000;
+        nRuleChangeActivationThreshold = 108; // 75% for testchains
+        nMinerConfirmationWindow = 144; // Faster than normal for segnet (144 instead of 2016)
+//******//TODO: FIX THE CONSENSUS PART OF BELOW.
+        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
+        vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
+        vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
+
+//******//TODO: FIX THIS V, requires UintToArith256 Lib.
+        genesis = CreateGenesisBlock(1452831101, 0, UintToArith256(powLimit).GetCompact(), 1, 50 * COIN);
+        hashGenesisBlock = genesis.GetHash();
+
+        vFixedSeeds.clear();
+        vSeeds.clear();
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,158);
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x05)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x05)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
+
+        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_seg, pnSeed6_seg + ARRAYLEN(pnSeed6_seg));
+
+        fMiningRequiresPeers = true;
+        fDefaultConsistencyChecks = false;
+        fRequireStandard = false;
+        fMineBlocksOnDemand = false;
+        fTestnetToBeDeprecatedFieldRPC = true;
+
+        // checkpointData is empty
+    }
+};
+static CSegNetParams segNetParams;
+
+
+/**
  * Regression test
  */
 class CRegTestParams : public CTestNetParams {
@@ -359,6 +441,8 @@ CChainParams &Params(CBaseChainParams::Network network) {
             return mainParams;
         case CBaseChainParams::TESTNET:
             return testNetParams;
+    else if (chain == CBaseChainParams::SEGNET)
+            return segNetParams;
         case CBaseChainParams::REGTEST:
             return regTestParams;
         case CBaseChainParams::UNITTEST:
