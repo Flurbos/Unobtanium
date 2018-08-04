@@ -170,8 +170,15 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 {
+    //TODO: Add Conesus::Params& params
+    //bool fNegative;
+    //bool fOverflow;
     CBigNum bnTarget;
 
+    if (hash == Params().hashGenesisBlock)//Might fail.
+        return true;
+
+    //REMOVE THIS LATER V.
     if (Params().SkipProofOfWorkCheck())
        return true;
 
