@@ -19,6 +19,7 @@ public:
         MAIN,
         TESTNET,
         REGTEST,
+	SEGNET,
         UNITTEST,
 
         MAX_NETWORK_TYPES

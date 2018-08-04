@@ -36,6 +36,21 @@ public:
 };
 static CBaseTestNetParams testNetParams;
 
+/**
+ * Segnet
+ */
+class CBaseSegNetParams : public CBaseChainParams
+{
+public:
+    CBaseSegNetParams()
+    {
+        nRPCPort = 65532;
+        strDataDir = "segnet4";
+    }
+};
+static CBaseSegNetParams segNetParams;
+
+
 /*
  * Regression test
  */
@@ -79,6 +94,9 @@ void SelectBaseParams(CBaseChainParams::Network network)
     case CBaseChainParams::TESTNET:
         pCurrentBaseParams = &testNetParams;
         break;
+    case CBaseChainParams::SEGNET:
+        pCurrentBaseParams = &segNetParams;
+        break;
     case CBaseChainParams::REGTEST:
         pCurrentBaseParams = &regTestParams;
         break;
@@ -95,13 +113,16 @@ CBaseChainParams::Network NetworkIdFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
     bool fTestNet = GetBoolArg("-testnet", false);
+    bool fSegNet = GetBoolArg("-segnet", false);
 
-    if (fTestNet && fRegTest)
+    if ((int)fTestNet + (int)fRegTest + (int)fSegNet > 1)
         return CBaseChainParams::MAX_NETWORK_TYPES;
     if (fRegTest)
         return CBaseChainParams::REGTEST;
     if (fTestNet)
         return CBaseChainParams::TESTNET;
+    if (fSegNet)
+        return CBaseChainParams::SEGNET;
     return CBaseChainParams::MAIN;
 }
 
