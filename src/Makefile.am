@@ -75,6 +75,7 @@ BITCOIN_CORE_H = \
   alert.h \
   allocators.h \
   amount.h \
+  arith_uint256.h \
   auxpow.h \
   base58.h \
   bignum.h \

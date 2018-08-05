@@ -283,13 +283,14 @@ class CSegNetParams : public CChainParams {
 public:
     CSegNetParams() {
         strNetworkID = "segnet4";
-        nSubsidyHalvingInterval = 210000;
+        nSubsidyHalvingInterval = 100000;
         nMajorityEnforceBlockUpgrade = 7;
         nMajorityRejectBlockOutdated = 9;
         nMajorityWindow = 10;
         BIP34Height = -1;
         BIP34Hash = uint256();
-        powLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // 512x lower min difficulty than mainnet
+        //powLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // 512x lower min difficulty than mainnet
+	bnProofOfWorkLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         nPowTargetTimespan = 3 * 60; // two weeks
         nPowTargetSpacing = 60;
         fPowAllowMinDifficultyBlocks = true;
@@ -298,28 +299,29 @@ public:
         pchMessageStart[1] = 0xab;
         pchMessageStart[2] = 0xa1;
         pchMessageStart[3] = 0xc4;
-        nDefaultPort = 28901;
+        nDefaultPort = 65511;
         nPruneAfterHeight = 1000;
         nRuleChangeActivationThreshold = 108; // 75% for testchains
         nMinerConfirmationWindow = 144; // Faster than normal for segnet (144 instead of 2016)
 //******//TODO: FIX THE CONSENSUS PART OF BELOW.
-        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
-        vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
-        vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
-        vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
+        //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+        //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+        //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        //vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
+        //vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
+        //vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
 
-//******//TODO: FIX THIS V, requires UintToArith256 Lib.
-        genesis = CreateGenesisBlock(1452831101, 0, UintToArith256(powLimit).GetCompact(), 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1533437785, 8797247, 0x20000001, 1, 1 * COIN); 
+	//UintToArith256(powLimit).GetCompact(), 1, 1 * COIN);//Will calculate nbits later, to generate hash for.
         hashGenesisBlock = genesis.GetHash();
+	assert(hashGenesisBlock == uint256S("0000000bd16f022a5da96358b1c372245ef01673757db70bec93a2fa6c56dfb9");
 
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,158);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,67);//30
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);//50
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,158);//158
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x05)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x05)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
