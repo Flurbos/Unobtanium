@@ -302,10 +302,11 @@ public:
         pchMessageStart[2] = 0xa1;
         pchMessageStart[3] = 0xc4;
         nDefaultPort = 65511;
-        //nPruneAfterHeight = 1000;
+        nPruneAfterHeight = 1000;
         //nRuleChangeActivationThreshold = 108; // 75% for testchains
         //nMinerConfirmationWindow = 144; // Faster than normal for segnet (144 instead of 2016)
-//******//TODO: FIX THE CONSENSUS PART OF BELOW.
+
+	//******//TODO: FIX THE CONSENSUS PART OF BELOW.
         //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -314,7 +315,7 @@ public:
         //vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
 
 	//UintToArith256(powLimit).GetCompact(), 1, 1 * COIN);//Will calculate nbits later, to generate hash for.
-        //genesis = CreateGenesisBlock(1533437785, 8797247, 0x20000001, 1, 1 * COIN); 
+        //genesis = CreateGenesisBlock(1533437785, 8797247, 0x20000001, 1, 1 * COIN);
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
         genesis.nTime    = 1533437785;
@@ -322,7 +323,7 @@ public:
         genesis.nNonce   = 8797247;
 
         hashGenesisBlock = genesis.GetHash();
-	assert(hashGenesisBlock == uint256S("0000000bd16f022a5da96358b1c372245ef01673757db70bec93a2fa6c56dfb9"));
+        assert(hashGenesisBlock == uint256S("0000000bd16f022a5da96358b1c372245ef01673757db70bec93a2fa6c56dfb9"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -337,7 +338,7 @@ public:
         convertSeed6(vFixedSeeds, pnSeed6_seg, ARRAYLEN(pnSeed6_seg));
 
         fMiningRequiresPeers = true;
-        //fDefaultConsistencyChecks = false;
+        fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
