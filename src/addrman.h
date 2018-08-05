@@ -239,6 +239,9 @@ protected:
     //! nUnkBias determines how much to favor new addresses over tried ones (min=0, max=100)
     CAddress Select_(int nUnkBias);
 
+    //! Wraps GetRandInt to allow tests to override RandomInt and make it determinismistic.
+    virtual int RandomInt(int nMax);
+
 #ifdef DEBUG_ADDRMAN
     //! Perform consistency check. Returns an error code or zero.
     int Check_();

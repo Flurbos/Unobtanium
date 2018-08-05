@@ -22,6 +22,7 @@ struct SeedSpec6 {
 
 #include "chainparamsseeds.h"
 
+/* Use Later
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -42,6 +43,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
     return genesis;
 }
+*/
 
 /**
  * Main network
@@ -279,30 +281,30 @@ static CTestNetParams testNetParams;
 /**
  * Segnet
  */
-class CSegNetParams : public CChainParams {
+class CSegNetParams : public CMainParams {
 public:
     CSegNetParams() {
         strNetworkID = "segnet4";
         nSubsidyHalvingInterval = 100000;
-        nMajorityEnforceBlockUpgrade = 7;
-        nMajorityRejectBlockOutdated = 9;
-        nMajorityWindow = 10;
-        BIP34Height = -1;
-        BIP34Hash = uint256();
+        nEnforceBlockUpgradeMajority = 7;
+        nRejectBlockOutdatedMajority = 9;
+        //nMajorityWindow = 10;
+        //BIP34Height = -1;
+        //BIP34Hash = uint256();
         //powLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // 512x lower min difficulty than mainnet
 	bnProofOfWorkLimit = uint256S("000001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        nPowTargetTimespan = 3 * 60; // two weeks
-        nPowTargetSpacing = 60;
-        fPowAllowMinDifficultyBlocks = true;
-        fPowNoRetargeting = false;
+        nTargetTimespan = 3 * 60; // two weeks
+        nTargetSpacing = 60;
+        fAllowMinDifficultyBlocks = true;
+        //fNoRetargeting = false;
         pchMessageStart[0] = 0xdc;
         pchMessageStart[1] = 0xab;
         pchMessageStart[2] = 0xa1;
         pchMessageStart[3] = 0xc4;
         nDefaultPort = 65511;
-        nPruneAfterHeight = 1000;
-        nRuleChangeActivationThreshold = 108; // 75% for testchains
-        nMinerConfirmationWindow = 144; // Faster than normal for segnet (144 instead of 2016)
+        //nPruneAfterHeight = 1000;
+        //nRuleChangeActivationThreshold = 108; // 75% for testchains
+        //nMinerConfirmationWindow = 144; // Faster than normal for segnet (144 instead of 2016)
 //******//TODO: FIX THE CONSENSUS PART OF BELOW.
         //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         //vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
@@ -311,10 +313,16 @@ public:
         //vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         //vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
 
-        genesis = CreateGenesisBlock(1533437785, 8797247, 0x20000001, 1, 1 * COIN); 
 	//UintToArith256(powLimit).GetCompact(), 1, 1 * COIN);//Will calculate nbits later, to generate hash for.
+        //genesis = CreateGenesisBlock(1533437785, 8797247, 0x20000001, 1, 1 * COIN); 
+        genesis.hashMerkleRoot = genesis.BuildMerkleTree();
+        genesis.nVersion = 1;
+        genesis.nTime    = 1533437785;
+        genesis.nBits    = 0x20000001;
+        genesis.nNonce   = 8797247;
+
         hashGenesisBlock = genesis.GetHash();
-	assert(hashGenesisBlock == uint256S("0000000bd16f022a5da96358b1c372245ef01673757db70bec93a2fa6c56dfb9");
+	assert(hashGenesisBlock == uint256S("0000000bd16f022a5da96358b1c372245ef01673757db70bec93a2fa6c56dfb9"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -325,10 +333,11 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x05)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x05)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_seg, pnSeed6_seg + ARRAYLEN(pnSeed6_seg));
+        //vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_seg, pnSeed6_seg + ARRAYLEN(pnSeed6_seg));
+        convertSeed6(vFixedSeeds, pnSeed6_seg, ARRAYLEN(pnSeed6_seg));
 
         fMiningRequiresPeers = true;
-        fDefaultConsistencyChecks = false;
+        //fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
@@ -443,7 +452,7 @@ CChainParams &Params(CBaseChainParams::Network network) {
             return mainParams;
         case CBaseChainParams::TESTNET:
             return testNetParams;
-    else if (chain == CBaseChainParams::SEGNET)
+        case CBaseChainParams::SEGNET:
             return segNetParams;
         case CBaseChainParams::REGTEST:
             return regTestParams;

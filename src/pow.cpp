@@ -21,7 +21,7 @@ unsigned int static GetNextWorkRequired_V1(const CBlockIndex* pindexLast, const 
     // Genesis block
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
-        
+
     if (pindexLast->nHeight+1 < nAveragingInterval) 
         return nProofOfWorkLimit;
 
@@ -175,8 +175,9 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
     //bool fOverflow;
     CBigNum bnTarget;
 
-    if (hash == Params().hashGenesisBlock)//Might fail.
-        return true;
+    //Temp remove for now, stick with skipproofofworkcheck for now..
+    //if (hash == Params().hashGenesisBlock)//Might fail.
+    //    return true;
 
     //REMOVE THIS LATER V.
     if (Params().SkipProofOfWorkCheck())
