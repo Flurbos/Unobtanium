@@ -20,7 +20,7 @@ packages:
 - "zip"
 reference_datetime: "2018-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/unobtanium-official/Unobtanium"
+- "url": "https://github.com/Flurbos/Unobtanium"
   "dir": "unobtanium"
 files: []
 script: |
