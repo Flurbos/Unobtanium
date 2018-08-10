@@ -31,9 +31,10 @@ $(package)_config_opts += -skip qtwinextras -skip qtxmlpatterns -skip qtscript -
 $(package)_config_opts += -prefix $(host_prefix) -bindir $(build_prefix)/bin
 $(package)_config_opts += -c++11 -openssl-linked  -v -static -silent -pkg-config
 $(package)_config_opts += -qt-libpng -qt-libjpeg -qt-zlib -qt-pcre
-$(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
-$(package)_config_opts_aarch64_linux = -platform linux-g++ -xplatform $(host)
+$(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
+$(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
+$(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux -device-option MAC_SDK_PATH=$(OSX_SDK) -device-option CROSS_COMPILE="$(host)-"
