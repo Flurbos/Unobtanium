@@ -7,7 +7,7 @@ $(package)_dependencies=openssl
 $(package)_linux_dependencies=freetype fontconfig dbus libxcb libX11 xproto libXext
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib
-$(package)_patches=mac-qmake.conf aarch32-qmake.conf fix-xcb-include-order.patch qt5-tablet-osx.patch qt5-yosemite.patch
+$(package)_patches=mac-qmake.conf aarch32-qmake.conf aarch64-qmake.conf fix-xcb-include-order.patch qt5-tablet-osx.patch qt5-yosemite.patch
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -31,6 +31,9 @@ $(package)_config_opts += -skip qtwinextras -skip qtxmlpatterns -skip qtscript -
 $(package)_config_opts += -prefix $(host_prefix) -bindir $(build_prefix)/bin
 $(package)_config_opts += -c++11 -openssl-linked  -v -static -silent -pkg-config
 $(package)_config_opts += -qt-libpng -qt-libjpeg -qt-zlib -qt-pcre
+$(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
+$(package)_config_opts_aarch64_linux = -platform linux-g++ -xplatform $(host)
+$(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux -device-option MAC_SDK_PATH=$(OSX_SDK) -device-option CROSS_COMPILE="$(host)-"
@@ -58,6 +61,9 @@ define $(package)_preprocess_cmds
   mkdir -p qtbase/mkspecs/arm-linux-gnueabihf &&\
   cp -f qtbase/mkspecs/linux-arm-gnueabi-g++/qplatformdefs.h qtbase/mkspecs/arm-linux-gnueabihf/ &&\
   cp -f $($(package)_patch_dir)/aarch32-qmake.conf qtbase/mkspecs/arm-linux-gnueabihf/qmake.conf &&\
+  mkdir -p qtbase/mkspecs/aarch64-linux-gnu &&\
+  cp -f qtbase/mkspecs/linux-arm-gnueabi-g++/qplatformdefs.h qtbase/mkspecs/aarch64-linux-gnu/ &&\
+  cp -f $($(package)_patch_dir)/aarch64-qmake.conf qtbase/mkspecs/aarch64-linux-gnu/qmake.conf &&\
   patch -p1 < $($(package)_patch_dir)/fix-xcb-include-order.patch && \
   patch -p1 < $($(package)_patch_dir)/qt5-tablet-osx.patch && \
   patch -d qtbase -p1 < $($(package)_patch_dir)/qt5-yosemite.patch && \
