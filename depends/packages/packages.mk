@@ -13,6 +13,9 @@ qt_mingw32_packages=qt
 qt_linux_$(USE_LINUX_STATIC_QT5):=$(qt5_linux_packages)
 qt_linux_:=$(qt46_linux_packages)
 qt_linux_packages:=$(qt_linux_$(USE_LINUX_STATIC_QT5))
+qt_x86_64_linux_packages:=qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans
+qt_i686_linux_packages:=$(qt_x86_64_linux_packages)
+qt_arm_linux_packages:=$(qt_x86_64_linux_packages)
 
 wallet_packages=bdb
 
