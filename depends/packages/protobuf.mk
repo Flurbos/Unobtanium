@@ -25,5 +25,6 @@ define $(package)_stage_cmds
 endef
 
 define $(package)_postprocess_cmds
+  patch -p1 < $($(package)_patch_dir)/protobuf-2.5.0-arm64.patch && \
   rm lib/libprotoc.a
 endef
