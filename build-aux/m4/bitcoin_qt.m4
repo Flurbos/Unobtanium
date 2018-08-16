@@ -280,6 +280,41 @@ AC_DEFUN([_BITCOIN_QT_CHECK_STATIC_PLUGINS],[
   LIBS="$CHECK_STATIC_PLUGINS_TEMP_LIBS"
 ])
 
+dnl Internal. Find paths necessary for linking qt static plugins
+dnl Inputs: bitcoin_qt_got_major_vers. 4 or 5.
+dnl Inputs: qt_plugin_path. optional.
+dnl Outputs: QT_LIBS is appended
+AC_DEFUN([_BITCOIN_QT_FIND_STATIC_PLUGINS],[
+  if test x$bitcoin_qt_got_major_vers = x5; then
+      if test x$qt_plugin_path != x; then
+        QT_LIBS="$QT_LIBS -L$qt_plugin_path/platforms"
+        if test -d "$qt_plugin_path/accessible"; then
+          QT_LIBS="$QT_LIBS -L$qt_plugin_path/accessible"
+        fi
+      fi
+     m4_ifdef([PKG_CHECK_MODULES],[
+     if test x$use_pkgconfig = xyes; then
+       PKG_CHECK_MODULES([QTPLATFORM], [Qt5PlatformSupport], [QT_LIBS="$QTPLATFORM_LIBS $QT_LIBS"])
+       if test x$TARGET_OS = xlinux; then
+         PKG_CHECK_MODULES([X11XCB], [x11-xcb], [QT_LIBS="$X11XCB_LIBS $QT_LIBS"])
+         if ${PKG_CONFIG} --exists "Qt5Core >= 5.5" 2>/dev/null; then
+           PKG_CHECK_MODULES([QTXCBQPA], [Qt5XcbQpa], [QT_LIBS="$QTXCBQPA_LIBS $QT_LIBS"])
+         fi
+       elif test x$TARGET_OS = xdarwin; then
+         PKG_CHECK_MODULES([QTPRINT], [Qt5PrintSupport], [QT_LIBS="$QTPRINT_LIBS $QT_LIBS"])
+       fi
+     else
+       QT_LIBS="-lQt5PlatformSupport $QT_LIBS"
+     fi
+     ])
+  else
+    if test x$qt_plugin_path != x; then
+      QT_LIBS="$QT_LIBS -L$qt_plugin_path/accessible"
+      QT_LIBS="$QT_LIBS -L$qt_plugin_path/codecs"
+    fi
+  fi
+])
+
 dnl Internal. Find Qt libraries using pkg-config.
 dnl Inputs: bitcoin_qt_want_version (from --with-gui=). The version to check
 dnl         first.
