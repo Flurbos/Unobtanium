@@ -31,6 +31,24 @@ $(package)_config_opts += -prefix $(host_prefix) -bindir $(build_prefix)/bin
 $(package)_config_opts += -hostprefix $(build_prefix)
 $(package)_config_opts += -c++11 -openssl-linked  -v -static -silent -pkg-config
 $(package)_config_opts += -qt-libpng -qt-libjpeg -qt-zlib -qt-pcre
+$(package)_config_opts += -no-pulseaudio
+$(package)_config_opts += -no-openvg
+$(package)_config_opts += -no-xrender
+$(package)_config_opts += -no-alsa
+$(package)_config_opts += -no-mtdev
+$(package)_config_opts += -no-gstreamer
+$(package)_config_opts += -no-mitshm
+$(package)_config_opts += -no-kms
+$(package)_config_opts += -no-reduce-relocations
+$(package)_config_opts += -no-egl
+$(package)_config_opts += -no-eglfs
+$(package)_config_opts += -no-linuxfb
+$(package)_config_opts += -no-xinput2
+$(package)_config_opts += -no-libudev
+$(package)_config_opts += -no-use-gold-linker
+$(package)_config_opts += -reduce-exports
+$(package)_config_opts += -optimized-qmake
+
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux -device-option MAC_SDK_PATH=$(OSX_SDK) -device-option MAC_SDK_VERSION=$(OSX_SDK_VERSION) -device-option CROSS_COMPILE="$(host)-"
@@ -38,7 +56,7 @@ $(package)_config_opts_darwin += -device-option MAC_MIN_VERSION=$(OSX_MIN_VERSIO
 
 endif
 
-$(package)_config_opts_linux  = -qt-xkbcommon -qt-xcb  -no-eglfs -no-linuxfb -system-freetype -no-sm -fontconfig -no-xinput2 -no-libudev -no-egl -no-opengl
+$(package)_config_opts_linux  = -qt-xkbcommon -qt-xcb -system-freetype -no-sm -fontconfig -no-xinput2 -no-libudev -no-opengl
 $(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
