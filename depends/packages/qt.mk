@@ -1,18 +1,21 @@
 PACKAGE=qt
-$(package)_version=5.7.1
-$(package)_download_path=http://download.qt.io/archive/qt/5.7/$($(package)_version)/submodules
+$(package)_version=5.9.6
+$(package)_download_path=https://download.qt.io/official_releases/qt/5.9/$($(package)_version)/submodules
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
+$(package)_sha256_hash=eed620cb268b199bd83b3fc6a471c51d51e1dc2dbb5374fc97a0cc75facbe36f
 $(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib
-$(package)_patches=mac-qmake.conf aarch32-qmake.conf aarch64-qmake.conf fix-xcb-include-order.patch mingw-uuidof.patch pidlist_absolute.patch fix_qt_pkgconfig.patch fix_riscv64_arch.patch
+$(package)_patches=mac-qmake.conf aarch32-qmake.conf aarch64-qmake.conf fix_qt_pkgconfig.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch
+
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
-$(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
+$(package)_qttranslations_sha256_hash=9822084f8e2d2939ba39f4af4c0c2320e45d5996762a9423f833055607604ed8
+
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
-$(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
+$(package)_qttools_sha256_hash=50e75417ec0c74bb8b1989d1d8e981ee83690dce7dfc0c2169f7c00f397e5117
+
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 
@@ -119,10 +122,10 @@ define $(package)_preprocess_cmds
   mkdir -p qtbase/mkspecs/aarch64-linux-gnu &&\
   cp -f qtbase/mkspecs/linux-arm-gnueabi-g++/qplatformdefs.h qtbase/mkspecs/aarch64-linux-gnu/ &&\
   cp -f $($(package)_patch_dir)/aarch64-qmake.conf qtbase/mkspecs/aarch64-linux-gnu/qmake.conf &&\
-  patch -p1 < $($(package)_patch_dir)/mingw-uuidof.patch && \
-  patch -p1 < $($(package)_patch_dir)/pidlist_absolute.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix-xcb-include-order.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_configure_mac.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_no_printer.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_rcc_determinism.patch &&\
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
