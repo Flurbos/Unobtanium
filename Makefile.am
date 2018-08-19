@@ -1,8 +1,5 @@
 ACLOCAL_AMFLAGS = -I build-aux/m4
 SUBDIRS = src
-if ENABLE_MAN
-SUBDIRS += doc/man
-endif
 .PHONY: deploy FORCE
 
 if BUILD_BITCOIN_LIBS
@@ -195,24 +192,6 @@ EXTRA_DIST = $(top_srcdir)/share/genbuild.sh qa/pull-tester/rpc-tests.sh qa/pull
 CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
 
 .INTERMEDIATE: $(COVERAGE_INFO)
-
-
-DISTCHECK_CONFIGURE_FLAGS = --enable-man
-
-doc/doxygen/.stamp: doc/Doxyfile FORCE
-	$(MKDIR_P) $(@D)
-	$(DOXYGEN) $^
-	$(AM_V_at) touch $@
-
-if HAVE_DOXYGEN
-docs: doc/doxygen/.stamp
-else
-docs:
-	@echo "error: doxygen not found"
-endif
-
-clean-docs:
-	rm -rf doc/doxygen
 
 clean-local:
 	rm -rf test_bitcoin.coverage/ total.coverage/ cache/ $(OSX_APP)
